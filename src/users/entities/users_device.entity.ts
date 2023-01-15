@@ -6,8 +6,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { UserEntity } from 'src/users/entities/user.entity';
-import { DeviceEntity } from 'src/devices/entities/device.entity';
+import { UserEntity } from '../entities/user.entity';
+import { DeviceEntity } from '../../devices/entities/device.entity';
+import { localsEntity } from '../../locals/entities/locals.entity';
 
 @Entity({ name: 'users_devices' })
 export class UsersDeviceEntity {
@@ -25,8 +26,11 @@ export class UsersDeviceEntity {
   })
   device: DeviceEntity;
 
-  @Column()
-  local: string;
+  @JoinColumn({ name: 'local_id' })
+  @ManyToOne(() => localsEntity, (locals) => locals.users_devices, {
+    cascade: true,
+  })
+  local: localsEntity;
 
   @Column()
   is_on: boolean;

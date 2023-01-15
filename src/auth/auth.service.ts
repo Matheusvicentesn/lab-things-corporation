@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { updatePasswordDTO } from './dto/update-password.dto';
 import { splitUserName } from 'src/utils/splitUserName';
 import { payloadDTO } from './dto/payload.dto';
+import { updateUserDTO } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -54,6 +55,52 @@ export class AuthService {
     });
   }
 
+  async updateUser(updateUserDTO: updateUserDTO, payload: payloadDTO) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user: UserEntity = await this.userRepository.findOne({
+          where: { id: payload.id },
+          relations: { address: true },
+        });
+
+        const credentials: CredentialsDTO = {
+          email: updateUserDTO.email,
+          password: updateUserDTO.password,
+        };
+
+        const checkUser = await this.checkCredentials(credentials);
+
+        if (checkUser == null) {
+          reject('data invalid');
+        }
+        const userUpdate = this.userRepository.create(user);
+        userUpdate.name = updateUserDTO.name;
+        // user.email = updateUserDTO.email;
+        userUpdate.profile_pic = updateUserDTO.profile_pic;
+        userUpdate.phone = updateUserDTO.phone;
+        userUpdate.address.zip_code = updateUserDTO.address.zip_code;
+        userUpdate.address.street = updateUserDTO.address.street;
+        userUpdate.address.city = updateUserDTO.address.city;
+        userUpdate.address.neighborhood = updateUserDTO.address.neighborhood;
+        userUpdate.address.state = updateUserDTO.address.state;
+        userUpdate.address.complement = updateUserDTO.address.complement;
+        userUpdate.address.number = updateUserDTO.address.number;
+        userUpdate.salt = await bcrypt.genSalt(12);
+        userUpdate.password = await this.hashPassword(
+          updateUserDTO.newpassword,
+          userUpdate.salt,
+        );
+
+        const saveUserUpdate = await this.userRepository.save(userUpdate);
+        delete saveUserUpdate.password;
+        delete saveUserUpdate.salt;
+        resolve(saveUserUpdate);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   async signIn(credentials: CredentialsDTO) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -72,7 +119,7 @@ export class AuthService {
           email: user.email,
         };
         const token = this.jwtService.sign(jwtPayload);
-        resolve({ token });
+        resolve({ token, user });
       } catch (error) {
         error;
       }
@@ -84,6 +131,9 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: {
         email: email,
+      },
+      relations: {
+        address: true,
       },
     });
 
@@ -99,7 +149,6 @@ export class AuthService {
         const userReturn = await this.createUser(user);
         resolve(userReturn);
       } catch (error) {
-        console.log(error);
         reject(error);
       }
     });
