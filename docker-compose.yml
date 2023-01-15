@@ -1,7 +1,7 @@
 version: '3'
 services:
   nest:
-    build: ./docker
+    image: matheusvicentesn/nest:1.0
     entrypoint: ./docker/entrypoint.sh
     container_name: nest
     ports:
@@ -14,7 +14,7 @@ services:
       - postgres
 
   react:
-    build: ./docker/react
+    image: matheusvicentesn/react:1.0
     entrypoint: ./docker/entrypoint.sh
     container_name: react
     ports:
@@ -27,7 +27,7 @@ services:
       - postgres
 
   db:
-    build: ./docker/postgres
+    image: matheusvicentesn/postgres:1.0
     container_name: postgres
     restart: always
     tty: true
@@ -40,7 +40,7 @@ services:
       - postgres
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: matheusvicentesn/pgadmin:1.0
     container_name: pgadmin
     tty: true
     environment:

@@ -34,7 +34,6 @@ export const Dispositivos = () => {
       buscarDispositivos(storageValues.token, setLista);
     }
   }, [storageValues?.token, storageValues?.user, setLista]);
-  console.log(storageValues);
 
   // Buscar locais
   const [locais, setLocais] = useState();
@@ -82,7 +81,7 @@ export const Dispositivos = () => {
       local,
       room,
     );
-    console.log(storageValues.token, storageValues?.user, data, local, room);
+
     setIsOpen(false);
   };
 
@@ -105,14 +104,13 @@ export const Dispositivos = () => {
           </div>
           <form action="">
             <label htmlFor="local">Local:</label>
-            <select
-              value={local}
-              onChange={(e) => setLocal(e.target.value)}
-            >
+            <select value={local} onChange={(e) => setLocal(e.target.value)}>
               <option value="">Selecione um local</option>
               {locais?.map((objeto) => (
                 <Fragment key={objeto.description}>
-                  <option value={objeto.description}>{objeto.description}</option>
+                  <option value={objeto.description}>
+                    {objeto.description}
+                  </option>
                 </Fragment>
               ))}
             </select>

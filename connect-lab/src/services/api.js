@@ -49,7 +49,6 @@ export function buscarLocais(token, set) {
 }
 // check
 export function salvarDispositivos(token, user, data, local, room) {
-  console.log(`Minha Template Literal ${local}`);
   return fetch("http://localhost:3000/auth/linkdevice", {
     method: "POST",
 

@@ -42,7 +42,6 @@ export class UsersService {
           id: id,
           user: { id: payload.id },
         });
-        console.log(device);
 
         resolve(device);
       } catch (error) {
@@ -210,7 +209,6 @@ export class UsersService {
 
         newDevice = { ...createDevice, ...newDevice };
 
-        console.log(locals);
         newDevice.device = devices;
         newDevice.local = locals;
 

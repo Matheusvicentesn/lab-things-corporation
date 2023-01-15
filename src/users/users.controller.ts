@@ -113,7 +113,7 @@ export class UsersController {
     try {
       return await this.usersService.userDeviceInfo(payload.user, +id);
     } catch (error) {
-      console.log(error);
+     
       throw new HttpException({ reason: error }, HttpStatus.BAD_REQUEST);
     }
   }
@@ -124,7 +124,7 @@ export class UsersController {
     try {
       return await this.usersService.findUser(payload.user);
     } catch (error) {
-      console.log(error);
+  
       throw new HttpException({ reason: error }, HttpStatus.BAD_REQUEST);
     }
   }
@@ -135,7 +135,7 @@ export class UsersController {
     try {
       return await this.usersService.updateUserState(payload.user, +id);
     } catch (error) {
-      console.log(error);
+     
       throw new HttpException({ reason: error }, HttpStatus.BAD_REQUEST);
     }
   }
