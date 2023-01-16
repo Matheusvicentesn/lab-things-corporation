@@ -1,30 +1,5 @@
 version: '3'
 services:
-  nest:
-    image: matheusvicentesn/nest:1.0
-    entrypoint: ./docker/entrypoint.sh
-    container_name: nest
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/home/node/app
-    depends_on:
-      - db
-    networks:
-      - postgres
-
-  react:
-    image: matheusvicentesn/react:1.0
-    entrypoint: ./docker/entrypoint.sh
-    container_name: react
-    ports:
-      - '5000:5000'
-    volumes:
-      - ./connect-lab:/home/node/app
-    depends_on:
-      - db
-    networks:
-      - postgres
 
   db:
     image: matheusvicentesn/postgres:1.0
