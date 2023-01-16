@@ -147,7 +147,7 @@ export class UsersController {
       };
     } catch (error) {
       if (error == 'data invalid') {
-        throw new UnauthorizedException('email or password 2invalid');
+        throw new UnauthorizedException('email or password invalid');
       }
       throw new HttpException({ reason: error }, HttpStatus.BAD_REQUEST);
     }
