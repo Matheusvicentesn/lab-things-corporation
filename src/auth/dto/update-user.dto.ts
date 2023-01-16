@@ -10,7 +10,6 @@ import {
 } from 'class-validator';
 
 import { Type } from 'class-transformer';
-import { Match } from 'src/core/constraints/match.decorator';
 import { AddressDTO } from 'src/users/dto/address-dto';
 
 export class updateUserDTO {
