@@ -1,5 +1,17 @@
 version: '3'
 services:
+  app:
+    build: ./docker
+    entrypoint: ./docker/entrypoint.sh
+    container_name: nest
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - db
+    networks:
+      - postgres
 
   db:
     image: matheusvicentesn/postgres:1.0
