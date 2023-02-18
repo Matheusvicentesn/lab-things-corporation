@@ -14,6 +14,7 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { CredentialsDTO } from 'src/auth/dto/credentials.dto';
 import { updatePasswordDTO } from 'src/auth/dto/update-password.dto';
@@ -23,6 +24,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { CreateUsersDeviceDto } from './dto/create-users_device.dto';
 import { UsersService } from './users.service';
 
+@ApiTags('Users')
 @Controller('auth')
 export class UsersController {
   constructor(
@@ -30,10 +32,16 @@ export class UsersController {
     private authService: AuthService,
   ) {}
 
+  @ApiResponse({ status: 200 })
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
+  @ApiResponse({ status: 200, description: 'user data' })
+  @ApiResponse({
+    status: 401,
+    description: 'invalid login data',
+  })
   @Post('/signin')
   async singIn(@Body() credentials: CredentialsDTO) {
     try {
@@ -46,6 +54,15 @@ export class UsersController {
     }
   }
 
+  @ApiResponse({ status: 201, description: 'User Created' })
+  @ApiResponse({
+    status: 409,
+    description: 'User alredy exists in data base',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Missing information',
+  })
   @Post('/signup')
   async signUp(@Body() createUserDto: CreateUserDto) {
     try {
@@ -63,6 +80,15 @@ export class UsersController {
     }
   }
 
+  @ApiResponse({ status: 200, description: 'Password update' })
+  @ApiResponse({
+    status: 401,
+    description: 'E-mail or password invalid',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Missing information',
+  })
   @UseGuards(JwtAuthGuard)
   @Put('/updatepassword')
   async updatePassword(
@@ -82,6 +108,15 @@ export class UsersController {
     }
   }
 
+  @ApiResponse({ status: 201, description: 'Device linked' })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
   @UseGuards(JwtAuthGuard)
   @Post('/linkdevice')
   async createDeviceForUser(
@@ -97,6 +132,17 @@ export class UsersController {
       throw new HttpException({ reason: error }, HttpStatus.BAD_REQUEST);
     }
   }
+  @ApiResponse({ status: 200, description: 'Array of devices' })
+  @ApiResponse({
+    status: 404,
+  })
+  @ApiResponse({
+    status: 400,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
   @UseGuards(JwtAuthGuard)
   @Get('searchdevices')
   async searchDevices(@Request() payload, @Query('local') query) {
@@ -107,6 +153,17 @@ export class UsersController {
     }
   }
 
+  @ApiResponse({ status: 200, description: 'Device info' })
+  @ApiResponse({
+    status: 404,
+  })
+  @ApiResponse({
+    status: 400,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
   @UseGuards(JwtAuthGuard)
   @Get('userDeviceInfo/:id')
   async userDeviceInfo(@Request() payload, @Param('id') id: string) {
@@ -117,6 +174,17 @@ export class UsersController {
     }
   }
 
+  @ApiResponse({ status: 200, description: 'User info' })
+  @ApiResponse({
+    status: 404,
+  })
+  @ApiResponse({
+    status: 400,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
   @UseGuards(JwtAuthGuard)
   @Get('userinfo')
   async userInfo(@Request() payload) {
@@ -127,6 +195,14 @@ export class UsersController {
     }
   }
 
+  @ApiResponse({ status: 200, description: 'Change the device state' })
+  @ApiResponse({
+    status: 400,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
   @UseGuards(JwtAuthGuard)
   @Put('switchdevice/:id')
   async updateUserState(@Request() payload, @Param('id') id: string) {
@@ -137,6 +213,14 @@ export class UsersController {
     }
   }
 
+  @ApiResponse({ status: 200, description: 'Update user info' })
+  @ApiResponse({
+    status: 401,
+    description: 'E-mail or password invalid',
+  })
+  @ApiResponse({
+    status: 400,
+  })
   @UseGuards(JwtAuthGuard)
   @Put('/updateUser')
   async updateUser(@Body() updateUserDTO: updateUserDTO, @Request() payload) {
@@ -153,6 +237,14 @@ export class UsersController {
     }
   }
 
+  @ApiResponse({ status: 200, description: 'Device deleted' })
+  @ApiResponse({
+    status: 400,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
   @UseGuards(JwtAuthGuard)
   @Delete('deleteuserdevice/:id')
   async deleteUserDevice(@Param('id') id: string, @Request() payload) {
